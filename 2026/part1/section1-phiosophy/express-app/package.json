@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "node --watch main.js"
+    "start:dev": "node --watch main.js",
+    "gen:arch": "madge --image arch-graph.svg main.js"
   },
   "keywords": [],
   "author": "",
