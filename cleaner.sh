@@ -3,3 +3,6 @@ find . -name "node_modules" -exec rm -rf {} \;
 
 # find pnpm-lock.yaml and delete them
 find . -name "pnpm-lock.yaml" -exec rm -rf {} \;
+
+# find dist and delete them
+find . -name "dist" -exec rm -rf {} \;
