@@ -10,47 +10,46 @@ import {
   Res,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { TodoService } from './todo.service';
 
+//
 @Controller('todo')
 export class TodoController {
+  constructor(private readonly todoService: TodoService) {}
+
   @Get()
   findAll() {
-    // TODO: implement service
-    // return findAllTodos();
+    return this.todoService.findAllTodos();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    // TODO: implement service
-    // return findOneTodo(Number(id));
+    return this.todoService.findOneTodo(Number(id));
   }
 
   @Post()
   create(@Body() body: { id: number; title: string }) {
-    // TODO: implement service
-    // return createTodo(body);
+    return this.todoService.createTodo(body);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTodoBody: { id: number; title: string },
-  ) {
-    // TODO: implement service
-    // return updateTodo(Number(id), updateTodoBody);
+  update(@Param('id') id: string, @Body() updateTodoBody: { title: string }) {
+    return this.todoService.updateTodo(Number(id), updateTodoBody);
   }
 
   @Delete(':id')
   deleteTodo(@Param('id') id: string, @Res() response: Response) {
-    // TODO: implement service
-    // const result = deleteTodoService(Number(id));
-    // if (result) {
-    //   return response.json({
-    //     message: 'Todo deleted successfully',
-    //   });
-    // }
-    // return response.status(HttpStatus.BAD_REQUEST).json({
-    //   message: 'bad request',
-    // });
+    const result = this.todoService.deleteTodo(Number(id));
+
+    if (result) {
+      console.log(id);
+      return {
+        message: 'Todo deleted successfully',
+      };
+    }
+
+    return response.status(HttpStatus.BAD_REQUEST).json({
+      message: 'bad request',
+    });
   }
 }
