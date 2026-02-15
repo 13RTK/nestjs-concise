@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { TodoService } from './todo.service';
+import { CreateTodoDto } from './dto/create-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 
 //
 @Controller('todo')
@@ -28,12 +30,19 @@ export class TodoController {
   }
 
   @Post()
-  create(@Body() body: { id: number; title: string }) {
+  create(
+    @Body()
+    body: CreateTodoDto,
+  ) {
     return this.todoService.createTodo(body);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTodoBody: { title: string }) {
+  update(
+    @Param('id') id: string,
+    @Body()
+    updateTodoBody: UpdateTodoDto,
+  ) {
     return this.todoService.updateTodo(Number(id), updateTodoBody);
   }
 
