@@ -14,7 +14,6 @@ import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 
-//
 @Controller('todo')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
@@ -25,8 +24,8 @@ export class TodoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.todoService.findOneTodo(Number(id));
+  findOne(@Param('id') id: number) {
+    return this.todoService.findOneTodo(id);
   }
 
   @Post()
@@ -39,19 +38,19 @@ export class TodoController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body()
     updateTodoBody: UpdateTodoDto,
   ) {
-    return this.todoService.updateTodo(Number(id), updateTodoBody);
+    return this.todoService.updateTodo(id, updateTodoBody);
   }
 
   @Delete(':id')
   deleteTodo(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const result = this.todoService.deleteTodo(Number(id));
+    const result = this.todoService.deleteTodo(id);
 
     if (result) {
       return {
