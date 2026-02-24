@@ -27,13 +27,12 @@
         },
         "content": {
           "name": "content",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 255,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "is_completed": {
           "name": "is_completed",
