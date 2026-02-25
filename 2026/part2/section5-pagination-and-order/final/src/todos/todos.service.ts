@@ -4,6 +4,7 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Todo } from './entities/todo.entity';
+import { FilterTodoDto } from './dto/filter-todo.dto';
 
 @Injectable()
 export class TodosService {
@@ -21,8 +22,16 @@ export class TodosService {
     return todo;
   }
 
-  async findAll() {
-    return await this.todoRepository.findAll();
+  async findAll(filterTodoDto: FilterTodoDto) {
+    // TODO: move to environment variables
+    const { page = 1, limit = 5, orderBy = 'asc' } = filterTodoDto;
+    const offset = (page - 1) * limit;
+
+    return await this.todoRepository.findAll({
+      limit,
+      offset,
+      orderBy: { id: orderBy },
+    });
   }
 
   async findOne(id: number) {
