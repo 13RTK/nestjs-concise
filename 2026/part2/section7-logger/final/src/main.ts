@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DbExceptionFilter } from './fliters/db-exception.filter';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,8 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.useLogger(app.get(Logger));
 
   app.useGlobalFilters(new DbExceptionFilter());
 

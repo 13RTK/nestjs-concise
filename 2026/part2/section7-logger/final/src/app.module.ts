@@ -4,9 +4,18 @@ import { AppService } from './app.service';
 import { TodosModule } from './todos/todos.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UsersModule } from './users/users.module';
+import { LoggerModule } from 'nestjs-pino';
+import { pinoHttpConfig } from './configs/pino';
 
 @Module({
-  imports: [TodosModule, MikroOrmModule.forRoot(), UsersModule],
+  imports: [
+    TodosModule,
+    MikroOrmModule.forRoot(),
+    UsersModule,
+    LoggerModule.forRoot({
+      pinoHttp: pinoHttpConfig,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
