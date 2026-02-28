@@ -6,3 +6,6 @@ find . -name "pnpm-lock.yaml" -exec rm -rf {} \;
 
 # find dist and delete them
 find . -name "dist" -exec rm -rf {} \;
+
+# find .log and delete them
+find . -name ".log" -exec rm -rf {} \;
