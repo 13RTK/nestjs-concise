@@ -24,8 +24,7 @@ export class TodosController {
 
   @Get()
   findAll(@Query() filterTodoDto: FilterTodoDto) {
-    // return this.todosService.findAll(filterTodoDto);
-    return 'All todos';
+    return this.todosService.findAll(filterTodoDto);
   }
 
   @Get(':id')

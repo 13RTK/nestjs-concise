@@ -17,12 +17,7 @@ async function bootstrap() {
   // Fastify version
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({
-      logger: false,
-    }),
-    {
-      logger: false,
-    },
+    new FastifyAdapter(),
   );
 
   app.useGlobalPipes(
@@ -36,7 +31,7 @@ async function bootstrap() {
     }),
   );
 
-  // app.useLogger(app.get(Logger));
+  app.useLogger(app.get(Logger));
 
   app.useGlobalFilters(new DbExceptionFilter());
 
