@@ -4,4 +4,4 @@ dist
 pnpm-lock.yaml
 *-demo
 temp
-.log
+logs

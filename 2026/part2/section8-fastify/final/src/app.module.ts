@@ -12,9 +12,9 @@ import { pinoHttpConfig } from './configs/pino';
     TodosModule,
     MikroOrmModule.forRoot(),
     UsersModule,
-    LoggerModule.forRoot({
-      pinoHttp: pinoHttpConfig,
-    }),
+    // LoggerModule.forRoot({
+    //   pinoHttp: pinoHttpConfig,
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],
