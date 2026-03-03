@@ -8,39 +8,66 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
-          "unsigned": false,
-          "autoincrement": true,
-          "primary": true,
+          "type": "int4",
+          "length": null,
+          "precision": 32,
+          "scale": 0,
           "nullable": false,
+          "default": null,
+          "unsigned": true,
+          "autoincrement": true,
+          "comment": null,
+          "primary": true,
+          "unique": false,
+          "enumItems": [],
           "mappedType": "integer"
         },
         "title": {
           "name": "title",
           "type": "varchar(255)",
+          "length": 255,
+          "precision": null,
+          "scale": null,
+          "nullable": false,
+          "default": null,
           "unsigned": false,
           "autoincrement": false,
+          "comment": null,
           "primary": false,
-          "nullable": false,
-          "length": 255,
+          "unique": false,
+          "enumItems": [],
           "mappedType": "string"
         },
         "content": {
           "name": "content",
           "type": "text",
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "nullable": false,
+          "default": null,
           "unsigned": false,
           "autoincrement": false,
+          "comment": null,
           "primary": false,
-          "nullable": false,
+          "unique": false,
+          "enumItems": [],
           "mappedType": "text"
         },
         "is_completed": {
           "name": "is_completed",
-          "type": "boolean",
+          "type": "bool",
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "nullable": false,
+          "default": null,
           "unsigned": false,
           "autoincrement": false,
+          "comment": null,
           "primary": false,
-          "nullable": false,
+          "unique": false,
+          "enumItems": [],
           "mappedType": "boolean"
         }
       },
@@ -48,49 +75,69 @@
       "schema": "public",
       "indexes": [
         {
-          "keyName": "todo_pkey",
           "columnNames": [
             "id"
           ],
           "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
+          "constraint": false,
+          "keyName": "todo_pkey",
+          "unique": true,
+          "primary": true
         }
       ],
       "checks": [],
       "foreignKeys": {},
-      "nativeEnums": {}
+      "nativeEnums": {},
+      "comment": null
     },
     {
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
-          "unsigned": false,
-          "autoincrement": true,
-          "primary": true,
+          "type": "int4",
+          "length": null,
+          "precision": 32,
+          "scale": 0,
           "nullable": false,
+          "default": null,
+          "unsigned": true,
+          "autoincrement": true,
+          "comment": null,
+          "primary": true,
+          "unique": false,
+          "enumItems": [],
           "mappedType": "integer"
         },
         "email": {
           "name": "email",
           "type": "varchar(255)",
+          "length": 255,
+          "precision": null,
+          "scale": null,
+          "nullable": false,
+          "default": null,
           "unsigned": false,
           "autoincrement": false,
+          "comment": null,
           "primary": false,
-          "nullable": false,
-          "length": 255,
+          "unique": true,
+          "enumItems": [],
           "mappedType": "string"
         },
         "password": {
           "name": "password",
           "type": "varchar(255)",
+          "length": 255,
+          "precision": null,
+          "scale": null,
+          "nullable": false,
+          "default": null,
           "unsigned": false,
           "autoincrement": false,
+          "comment": null,
           "primary": false,
-          "nullable": false,
-          "length": 255,
+          "unique": false,
+          "enumItems": [],
           "mappedType": "string"
         }
       },
@@ -102,25 +149,26 @@
             "email"
           ],
           "composite": false,
-          "keyName": "user_email_unique",
           "constraint": true,
-          "primary": false,
-          "unique": true
+          "keyName": "user_email_unique",
+          "unique": true,
+          "primary": false
         },
         {
-          "keyName": "user_pkey",
           "columnNames": [
             "id"
           ],
           "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
+          "constraint": false,
+          "keyName": "user_pkey",
+          "unique": true,
+          "primary": true
         }
       ],
       "checks": [],
       "foreignKeys": {},
-      "nativeEnums": {}
+      "nativeEnums": {},
+      "comment": null
     }
   ],
   "nativeEnums": {}

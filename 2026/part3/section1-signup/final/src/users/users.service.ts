@@ -22,19 +22,13 @@ export class UsersService {
     return user;
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
+  async findOne(email: string) {
+    const user = await this.userRepository.findOne({ email });
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }
