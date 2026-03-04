@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { DbExceptionFilter } from './fliters/db-exception.filter';
+import { DbExceptionFilter } from './filters/db-exception.filter';
 import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
