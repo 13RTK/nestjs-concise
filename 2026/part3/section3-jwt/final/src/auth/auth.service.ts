@@ -6,12 +6,17 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
-  async signIn(email: string, pass: string): Promise<any> {
+  async signIn(email: string, pass: string): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(email);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -22,13 +27,20 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const { password, ...result } = user;
-    // TODO: Generate a JWT and return it here
-    // instead of the user object
-    return result;
+    return this.generateUserToken(user);
   }
 
-  async signUp(email: string, password: string): Promise<any> {
+  private async generateUserToken(user: User) {
+    const payload = { sub: user.id, username: user.email };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+  }
+
+  async signUp(
+    email: string,
+    password: string,
+  ): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(email);
     if (user) {
       throw new ConflictException('User with this email already exists');
@@ -37,13 +49,11 @@ export class AuthService {
     // Hash password, create user
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await this.usersService.create({
+    const createdUser = await this.usersService.create({
       email,
       password: hashedPassword,
     });
 
-    return {
-      email,
-    };
+    return this.generateUserToken(createdUser);
   }
 }
