@@ -4,9 +4,12 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DbExceptionFilter } from './filters/db-exception.filter';
 import { Logger } from 'nestjs-pino';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
 
   app.useGlobalPipes(
     new ValidationPipe({
