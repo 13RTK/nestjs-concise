@@ -12,6 +12,7 @@ import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { FilterTodoDto } from './dto/filter-todo.dto';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 @Controller('todos')
 export class TodosController {
