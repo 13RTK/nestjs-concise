@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { PaginationArticleDto } from './dto/pagination-article.dto';
+import { FilterArticleDto } from './dto/filter-article.dto';
 
 @Controller('articles')
 export class ArticlesController {
@@ -21,8 +24,13 @@ export class ArticlesController {
   }
 
   @Get()
-  findAll() {
-    return this.articlesService.findAll();
+  findAll(@Query() filterArticleDto: FilterArticleDto) {
+    return this.articlesService.findAll(filterArticleDto);
+  }
+
+  @Get('public')
+  findAllPublic(@Query() paginationArticleDto: PaginationArticleDto) {
+    return this.articlesService.findAll(paginationArticleDto);
   }
 
   @Get(':id')

@@ -1,6 +1,7 @@
 import { ArticleStatus } from '../entities/article.entity';
 import {
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsPositive,
   IsString,
@@ -22,5 +23,6 @@ export class CreateArticleDto {
   status: ArticleStatus;
 
   @IsPositive()
+  @IsInt()
   authorId: number;
 }

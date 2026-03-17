@@ -2,9 +2,10 @@ import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Article } from './entities/article.entity';
+import { Article, ArticleStatus } from './entities/article.entity';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { User } from '../users/entities/user.entity';
+import { FilterArticleDto } from './dto/filter-article.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -36,9 +37,29 @@ export class ArticlesService {
     };
   }
 
-  async findAll() {
-    // TODO: Add pagination, filter, exclude content
-    const articles = await this.articleRepository.findAll();
+  async findAll(filterArticleDto: FilterArticleDto) {
+    const { page, query } = filterArticleDto;
+    const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10;
+    const offset = (page - 1) * limit;
+
+    // Only published articles can be seen
+    const where: any = {
+      status: ArticleStatus.PUBLISHED,
+    };
+
+    // Only user with query can search
+    if (query && query.trim().length > 0) {
+      where.title = {
+        $ilike: `%${query}%`,
+      };
+    }
+
+    const articles = await this.articleRepository.findAll({
+      limit,
+      offset,
+      exclude: ['content', 'updatedAt'],
+      where,
+    });
 
     return articles;
   }
