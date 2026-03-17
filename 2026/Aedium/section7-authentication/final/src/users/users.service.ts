@@ -13,8 +13,15 @@ export class UsersService {
     private readonly em: EntityManager,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const user = this.userRepository.create({
+      username: `${Date.now()}`,
+      ...createUserDto,
+    });
+
+    await this.em.flush();
+
+    return user;
   }
 
   // Admin
@@ -36,6 +43,12 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
+    return user;
+  }
+
+  async findUserByEmail(email: string) {
+    const user = await this.userRepository.findOne({ email });
 
     return user;
   }
