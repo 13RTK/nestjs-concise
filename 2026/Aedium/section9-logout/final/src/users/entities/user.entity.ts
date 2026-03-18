@@ -25,5 +25,5 @@ export class User {
   articles = new Collection<Article>(this);
 
   @Property({ type: 'text', nullable: true })
-  refreshToken?: string;
+  refreshToken?: string | null;
 }

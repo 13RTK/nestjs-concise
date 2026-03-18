@@ -18,4 +18,16 @@ export class AuthController {
   signUp(@Body() signInDto: SignUpDto) {
     return this.authService.signUp(signInDto.email, signInDto.password);
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh')
+  refreshToken(@Body() body: { refreshToken: string }) {
+    return this.authService.refresh(body.refreshToken);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  signout(@Body() body: { accessToken: string }) {
+    return this.authService.signOut(body.accessToken);
+  }
 }
