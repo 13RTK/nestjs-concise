@@ -53,8 +53,14 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id);
+
+    this.em.assign(user, updateUserDto);
+
+    await this.em.flush();
+
+    return user;
   }
 
   remove(id: number) {

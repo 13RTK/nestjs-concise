@@ -23,4 +23,7 @@ export class User {
 
   @OneToMany(() => Article, (article) => article.author, { nullable: true })
   articles = new Collection<Article>(this);
+
+  @Property({ type: 'text', nullable: true })
+  refreshToken?: string;
 }
