@@ -1,7 +1,18 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { Public } from './decorator/public.decorator';
+import { type Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -9,25 +20,26 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
+  @Public()
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
+  @Public()
   signUp(@Body() signInDto: SignUpDto) {
     return this.authService.signUp(signInDto.email, signInDto.password);
   }
 
-  @HttpCode(HttpStatus.OK)
-  @Post('refresh')
-  refreshToken(@Body() body: { refreshToken: string }) {
-    return this.authService.refresh(body.refreshToken);
+  @Get('refresh')
+  @Public()
+  refreshToken(@Req() request: Request) {
+    return this.authService.refresh(request);
   }
 
-  @HttpCode(HttpStatus.OK)
-  @Post('logout')
-  signout(@Body() body: { accessToken: string }) {
-    return this.authService.signOut(body.accessToken);
+  @Get('logout')
+  signout(@Req() req: any) {
+    return this.authService.signOut(req.user);
   }
 }

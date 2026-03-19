@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -8,6 +9,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { createHash, randomUUID } from 'node:crypto';
+import { Request } from 'express';
 
 const HASH_ROUNDS = 10;
 
@@ -63,9 +65,14 @@ export class AuthService {
     return await this.issueTokens(createdUser.id, createdUser.email);
   }
 
-  async refresh(refreshToken: string) {
+  async refresh(request: Request) {
+    // Extract the refresh token
+    const refreshToken = this.extractTokenFromHeader(request);
+    if (!refreshToken) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     // Verify the refresh token
-    // TODO: Add payload parse strategy
     const payload = await this.jwtService.verifyAsync(refreshToken, {
       secret: this.REFRESH_SECRET,
     });
@@ -87,14 +94,10 @@ export class AuthService {
     return await this.issueTokens(user.id, user.email);
   }
 
-  async signOut(accessToken: string) {
-    // Verify the access token
-    // TODO: Add payload parse strategy
-    const payload = await this.jwtService.verifyAsync(accessToken, {
-      secret: this.ACCESS_SECRET,
-    });
-
+  async signOut(payload: any) {
     await this.usersService.update(payload.sub, { refreshToken: null });
+
+    return { statusCode: HttpStatus.OK, message: 'Successfully signed out' };
   }
 
   private async issueTokens(id: number, email: string) {
@@ -135,5 +138,11 @@ export class AuthService {
       }),
     };
     return tokens;
+  }
+
+  extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+
+    return type === 'Bearer' ? token : undefined;
   }
 }
