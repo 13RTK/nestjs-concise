@@ -13,10 +13,23 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { PaginationArticleDto } from './dto/pagination-article.dto';
 import { FilterArticleDto } from './dto/filter-article.dto';
+import { Public } from '../auth/decorator/public.decorator';
 
 @Controller('articles')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
+
+  @Get('public')
+  @Public()
+  findAllPublic(@Query() paginationArticleDto: PaginationArticleDto) {
+    return this.articlesService.findAllPublic(paginationArticleDto);
+  }
+
+  @Get('public/:id')
+  @Public()
+  findOnePublic(@Param('id') id: number) {
+    return this.articlesService.findOnePublic(id);
+  }
 
   @Post()
   create(@Body() createArticleDto: CreateArticleDto) {
@@ -24,13 +37,9 @@ export class ArticlesController {
   }
 
   @Get()
+  // TODO: only available for admin
   findAll(@Query() filterArticleDto: FilterArticleDto) {
     return this.articlesService.findAll(filterArticleDto);
-  }
-
-  @Get('public')
-  findAllPublic(@Query() paginationArticleDto: PaginationArticleDto) {
-    return this.articlesService.findAll(paginationArticleDto);
   }
 
   @Get(':id')

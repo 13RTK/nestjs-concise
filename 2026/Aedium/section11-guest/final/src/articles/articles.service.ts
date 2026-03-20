@@ -37,7 +37,33 @@ export class ArticlesService {
     };
   }
 
+  // TODO: only available for admin
   async findAll(filterArticleDto: FilterArticleDto) {
+    const { page, query } = filterArticleDto;
+    const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10;
+    const offset = (page - 1) * limit;
+
+    const articles = await this.articleRepository.findAll({
+      limit,
+      offset,
+      exclude: ['content', 'updatedAt'],
+      where: {
+        title: {
+          $ilike: `%${query}%`,
+        },
+      },
+    });
+
+    return articles;
+  }
+
+  /**
+   * All the user(without login) can access to retrieve all the public articles
+   *
+   * @param filterArticleDto
+   * @returns the articles
+   */
+  async findAllPublic(filterArticleDto: FilterArticleDto) {
     const { page, query } = filterArticleDto;
     const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10;
     const offset = (page - 1) * limit;
@@ -64,6 +90,7 @@ export class ArticlesService {
     return articles;
   }
 
+  // TODO: only available for current user and admin
   async findOne(id: number) {
     // TODO: Add populate about author
     const article = await this.articleRepository.findOne(id, {
@@ -78,6 +105,26 @@ export class ArticlesService {
     return article;
   }
 
+  /**
+   * All the user(without login) can access to retrieve specified public article details
+   *
+   * @param id the id of article
+   * @returns specified article
+   */
+  async findOnePublic(id: number) {
+    const article = await this.articleRepository.findOne(id, {
+      populate: ['author'],
+      exclude: ['author.password', 'author.refreshToken', 'author.email'],
+    });
+
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+
+    return article;
+  }
+
+  // TODO: only available for current user
   async update(id: number, updateArticleDto: UpdateArticleDto) {
     const article = await this.findOne(id);
 
@@ -93,6 +140,7 @@ export class ArticlesService {
     };
   }
 
+  // TODO: only available for current user and admin
   async remove(id: number) {
     const article = await this.findOne(id);
 
