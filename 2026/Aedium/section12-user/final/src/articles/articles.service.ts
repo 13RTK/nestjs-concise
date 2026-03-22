@@ -15,9 +15,7 @@ export class ArticlesService {
     private readonly em: EntityManager,
   ) {}
 
-  async create(createArticleDto: CreateArticleDto) {
-    const { authorId, ...createArticleData } = createArticleDto;
-
+  async createByUser(authorId: number, createArticleDto: CreateArticleDto) {
     const user = await this.em.findOne(User, { id: authorId });
 
     if (!user) {
@@ -25,7 +23,7 @@ export class ArticlesService {
     }
 
     this.articleRepository.create({
-      ...createArticleData,
+      ...createArticleDto,
       author: user,
     });
 
@@ -37,21 +35,52 @@ export class ArticlesService {
     };
   }
 
+  async findAllByUser(authorId: number, filterArticleDto: FilterArticleDto) {
+    const { page, query } = filterArticleDto;
+    const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10;
+    const offset = (page - 1) * limit;
+
+    const where: any = {
+      author: {
+        id: authorId,
+      },
+    };
+
+    if (query && query.trim().length > 0) {
+      where.title = {
+        $ilike: `%${query}%`,
+      };
+    }
+
+    const articles = await this.articleRepository.findAll({
+      limit,
+      offset,
+      exclude: ['content', 'updatedAt'],
+      where,
+    });
+
+    return articles;
+  }
+
   // TODO: only available for admin
   async findAll(filterArticleDto: FilterArticleDto) {
     const { page, query } = filterArticleDto;
     const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10;
     const offset = (page - 1) * limit;
 
+    const where: any = {};
+
+    if (query && query.trim().length > 0) {
+      where.title = {
+        $ilike: `%${query}%`,
+      };
+    }
+
     const articles = await this.articleRepository.findAll({
       limit,
       offset,
       exclude: ['content', 'updatedAt'],
-      where: {
-        title: {
-          $ilike: `%${query}%`,
-        },
-      },
+      where,
     });
 
     return articles;
@@ -90,7 +119,7 @@ export class ArticlesService {
     return articles;
   }
 
-  // TODO: only available for current user and admin
+  // TODO: only available for admin
   async findOne(id: number) {
     // TODO: Add populate about author
     const article = await this.articleRepository.findOne(id, {
@@ -105,6 +134,12 @@ export class ArticlesService {
     return article;
   }
 
+  async findOneByUser(authorId: number, articleId: number) {
+    const article = await this.findOneWithAuthorId(articleId, authorId);
+
+    return article;
+  }
+
   /**
    * All the user(without login) can access to retrieve specified public article details
    *
@@ -112,10 +147,13 @@ export class ArticlesService {
    * @returns specified article
    */
   async findOnePublic(id: number) {
-    const article = await this.articleRepository.findOne(id, {
-      populate: ['author'],
-      exclude: ['author.password', 'author.refreshToken', 'author.email'],
-    });
+    const article = await this.articleRepository.findOne(
+      { id, status: ArticleStatus.PUBLISHED },
+      {
+        populate: ['author'],
+        exclude: ['author.password', 'author.refreshToken', 'author.email'],
+      },
+    );
 
     if (!article) {
       throw new NotFoundException('Article not found');
@@ -124,13 +162,14 @@ export class ArticlesService {
     return article;
   }
 
-  // TODO: only available for current user
-  async update(id: number, updateArticleDto: UpdateArticleDto) {
-    const article = await this.findOne(id);
+  async updateByUser(
+    authorId: number,
+    articleId: number,
+    updateArticleDto: UpdateArticleDto,
+  ) {
+    const article = await this.findOneWithAuthorId(articleId, authorId);
 
-    const { authorId, ...updateArticleData } = updateArticleDto;
-
-    this.em.assign(article, updateArticleData);
+    this.em.assign(article, updateArticleDto);
 
     await this.em.flush();
 
@@ -140,9 +179,8 @@ export class ArticlesService {
     };
   }
 
-  // TODO: only available for current user and admin
-  async remove(id: number) {
-    const article = await this.findOne(id);
+  async removeByUser(authorId: number, articleId: number) {
+    const article = await this.findOneWithAuthorId(articleId, authorId);
 
     await this.em.remove(article).flush();
 
@@ -150,5 +188,19 @@ export class ArticlesService {
       statusCode: HttpStatus.OK,
       message: 'Article deleted successfully',
     };
+  }
+
+  private async findOneWithAuthorId(articleId: number, authorId: number) {
+    const article = await this.articleRepository.findOne({
+      id: articleId,
+      author: {
+        id: authorId,
+      },
+    });
+
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+    return article;
   }
 }

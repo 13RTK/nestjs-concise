@@ -21,8 +21,4 @@ export class CreateArticleDto {
 
   @IsEnum(ArticleStatus)
   status: ArticleStatus;
-
-  @IsPositive()
-  @IsInt()
-  authorId: number;
 }
