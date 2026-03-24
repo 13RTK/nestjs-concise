@@ -1,11 +1,7 @@
-import { Collection } from '@mikro-orm/core';
-import {
-  Entity,
-  OneToMany,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/decorators/legacy';
-import { Article } from '../../articles/entities/article.entity';
+import { Collection } from "@mikro-orm/core";
+import { Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
+
+import { Article } from "../../articles/entities/article.entity";
 
 @Entity()
 export class User {
@@ -18,12 +14,12 @@ export class User {
   @Property()
   email: string;
 
-  @Property({ type: 'text' })
+  @Property({ type: "text" })
   password: string;
 
   @OneToMany(() => Article, (article) => article.author, { nullable: true })
   articles = new Collection<Article>(this);
 
-  @Property({ type: 'text', nullable: true })
+  @Property({ type: "text", nullable: true })
   refreshToken?: string | null;
 }

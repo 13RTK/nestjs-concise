@@ -1,8 +1,6 @@
 {
   "name": "public",
-  "namespaces": [
-    "public"
-  ],
+  "namespaces": ["public"],
   "tables": [
     {
       "name": "article",
@@ -66,10 +64,7 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": [
-            "draft",
-            "published"
-          ]
+          "enumItems": ["draft", "published"]
         },
         "created_at": {
           "name": "created_at",
@@ -119,9 +114,7 @@
       },
       "indexes": [
         {
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": false,
           "keyName": "article_pkey",
@@ -139,15 +132,11 @@
       ],
       "foreignKeys": {
         "article_author_id_foreign": {
-          "columnNames": [
-            "author_id"
-          ],
+          "columnNames": ["author_id"],
           "constraintName": "article_author_id_foreign",
           "localTableName": "public.article",
           "referencedTableName": "public.user",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "updateRule": "no action",
           "deleteRule": "no action"
         }
@@ -237,9 +226,7 @@
       },
       "indexes": [
         {
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": false,
           "keyName": "user_pkey",

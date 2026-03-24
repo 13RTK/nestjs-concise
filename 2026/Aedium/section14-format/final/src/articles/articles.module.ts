@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
-import { ArticlesService } from './articles.service';
-import { ArticlesController } from './articles.controller';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Article } from './entities/article.entity';
+import { MikroOrmModule } from "@mikro-orm/nestjs";
+import { Module } from "@nestjs/common";
+
+import { ArticlesController } from "./articles.controller";
+import { ArticlesService } from "./articles.service";
+import { Article } from "./entities/article.entity";
 
 @Module({
   imports: [MikroOrmModule.forFeature([Article])],

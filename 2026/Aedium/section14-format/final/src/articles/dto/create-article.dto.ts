@@ -1,12 +1,6 @@
-import { ArticleStatus } from '../entities/article.entity';
-import {
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsPositive,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsPositive, IsString, MaxLength } from "class-validator";
+
+import { ArticleStatus } from "../entities/article.entity";
 
 export class CreateArticleDto {
   @IsString()

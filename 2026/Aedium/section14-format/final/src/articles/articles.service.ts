@@ -1,11 +1,12 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { Article, ArticleStatus } from './entities/article.entity';
-import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { User } from '../users/entities/user.entity';
-import { FilterArticleDto } from './dto/filter-article.dto';
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+
+import { User } from "../users/entities/user.entity";
+import { CreateArticleDto } from "./dto/create-article.dto";
+import { FilterArticleDto } from "./dto/filter-article.dto";
+import { UpdateArticleDto } from "./dto/update-article.dto";
+import { Article, ArticleStatus } from "./entities/article.entity";
 
 @Injectable()
 export class ArticlesService {
@@ -19,7 +20,7 @@ export class ArticlesService {
     const user = await this.em.findOne(User, { id: authorId });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
     this.articleRepository.create({
@@ -31,7 +32,7 @@ export class ArticlesService {
 
     return {
       statusCode: HttpStatus.CREATED,
-      message: 'Article created successfully',
+      message: "Article created successfully",
     };
   }
 
@@ -55,7 +56,7 @@ export class ArticlesService {
     const articles = await this.articleRepository.findAll({
       limit,
       offset,
-      exclude: ['content', 'updatedAt'],
+      exclude: ["content", "updatedAt"],
       where,
     });
 
@@ -79,7 +80,7 @@ export class ArticlesService {
     const articles = await this.articleRepository.findAll({
       limit,
       offset,
-      exclude: ['content', 'updatedAt'],
+      exclude: ["content", "updatedAt"],
       where,
     });
 
@@ -112,7 +113,7 @@ export class ArticlesService {
     const articles = await this.articleRepository.findAll({
       limit,
       offset,
-      exclude: ['content', 'updatedAt'],
+      exclude: ["content", "updatedAt"],
       where,
     });
 
@@ -123,12 +124,12 @@ export class ArticlesService {
   async findOne(id: number) {
     // TODO: Add populate about author
     const article = await this.articleRepository.findOne(id, {
-      populate: ['author'],
-      exclude: ['author.password'],
+      populate: ["author"],
+      exclude: ["author.password"],
     });
 
     if (!article) {
-      throw new NotFoundException('Article not found');
+      throw new NotFoundException("Article not found");
     }
 
     return article;
@@ -150,23 +151,19 @@ export class ArticlesService {
     const article = await this.articleRepository.findOne(
       { id, status: ArticleStatus.PUBLISHED },
       {
-        populate: ['author'],
-        exclude: ['author.password', 'author.refreshToken', 'author.email'],
+        populate: ["author"],
+        exclude: ["author.password", "author.refreshToken", "author.email"],
       },
     );
 
     if (!article) {
-      throw new NotFoundException('Article not found');
+      throw new NotFoundException("Article not found");
     }
 
     return article;
   }
 
-  async updateByUser(
-    authorId: number,
-    articleId: number,
-    updateArticleDto: UpdateArticleDto,
-  ) {
+  async updateByUser(authorId: number, articleId: number, updateArticleDto: UpdateArticleDto) {
     const article = await this.findOneWithAuthorId(articleId, authorId);
 
     this.em.assign(article, updateArticleDto);
@@ -175,7 +172,7 @@ export class ArticlesService {
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'Article updated successfully',
+      message: "Article updated successfully",
     };
   }
 
@@ -186,7 +183,7 @@ export class ArticlesService {
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'Article deleted successfully',
+      message: "Article deleted successfully",
     };
   }
 
@@ -199,7 +196,7 @@ export class ArticlesService {
     });
 
     if (!article) {
-      throw new NotFoundException('Article not found');
+      throw new NotFoundException("Article not found");
     }
     return article;
   }

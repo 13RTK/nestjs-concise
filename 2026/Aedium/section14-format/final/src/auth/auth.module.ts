@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { UsersModule } from '../users/users.module';
-import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './guards/auth.guard';
+import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtModule } from "@nestjs/jwt";
+
+import { UsersModule } from "../users/users.module";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
+import { AuthGuard } from "./guards/auth.guard";
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { AuthGuard } from './guards/auth.guard';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { algorithm: 'HS256' },
+      signOptions: { algorithm: "HS256" },
     }),
   ],
   controllers: [AuthController],

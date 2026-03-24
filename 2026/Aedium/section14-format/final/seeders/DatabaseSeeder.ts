@@ -1,8 +1,10 @@
-import type { EntityManager } from '@mikro-orm/core';
-import { Seeder } from '@mikro-orm/seeder';
-import { UserFactory } from './UserFactory';
-import { ArticleFactory } from './ArticleFactory';
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
+import { Seeder } from "@mikro-orm/seeder";
+
+import { ArticleFactory } from "./ArticleFactory";
+import { UserFactory } from "./UserFactory";
+
+import type { EntityManager } from "@mikro-orm/core";
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
