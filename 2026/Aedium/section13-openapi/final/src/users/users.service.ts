@@ -48,7 +48,12 @@ export class UsersService {
   }
 
   async findMe(userId: number) {
-    const user = await this.userRepository.findOne({ id: userId });
+    const user = await this.userRepository.findOne(
+      { id: userId },
+      {
+        exclude: ['password', 'refreshToken'],
+      },
+    );
 
     if (!user) {
       throw new NotFoundException('User not found');

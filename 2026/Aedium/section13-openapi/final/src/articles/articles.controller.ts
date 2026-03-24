@@ -32,7 +32,7 @@ export class ArticlesController {
     return this.articlesService.findOnePublic(id);
   }
 
-  @Post()
+  @Post('me')
   createByCurrentUser(
     @Req() request: any,
     @Body() createArticleDto: CreateArticleDto,
@@ -71,7 +71,7 @@ export class ArticlesController {
     return this.articlesService.findOneByUser(authorId, id);
   }
 
-  @Patch()
+  @Patch('me/:id')
   updateByCurrentUser(
     @Req() request: any,
     @Param('id') articleId: number,
