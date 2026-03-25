@@ -2,6 +2,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable, NotFoundException } from "@nestjs/common";
 
+import { Role } from "../auth/enums/role.enum";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./entities/user.entity";
@@ -18,6 +19,7 @@ export class UsersService {
     const user = this.userRepository.create({
       username: `${Date.now()}`,
       ...createUserDto,
+      roles: [Role.User],
     });
 
     await this.em.flush();
@@ -31,10 +33,7 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    const user = await this.userRepository.findOne(id, {
-      populate: ["articles"],
-      exclude: ["password", "articles.content", "articles.createdAt", "articles.updatedAt"],
-    });
+    const user = await this.userRepository.findOne(id);
 
     if (!user) {
       throw new NotFoundException("User not found");

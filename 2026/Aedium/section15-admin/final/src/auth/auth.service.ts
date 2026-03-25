@@ -11,6 +11,7 @@ import { Request } from "express";
 import { createHash, randomUUID } from "node:crypto";
 
 import { UsersService } from "../users/users.service";
+import { Role } from "./enums/role.enum";
 
 const HASH_ROUNDS = 10;
 
@@ -40,7 +41,7 @@ export class AuthService {
     }
 
     // Generate a JWT and return it here
-    return await this.issueTokens(user.id, user.email);
+    return await this.issueTokens(user.id, user.email, user.roles);
   }
 
   async signUp(
@@ -63,7 +64,7 @@ export class AuthService {
     });
 
     // Generate JWT tokens and return them
-    return await this.issueTokens(createdUser.id, createdUser.email);
+    return await this.issueTokens(createdUser.id, createdUser.email, createdUser.roles);
   }
 
   async refresh(request: Request) {
@@ -79,7 +80,7 @@ export class AuthService {
     });
 
     // Check if the user exists
-    const user = await this.usersService.findOne(payload.sub);
+    const user = await this.usersService.findOne(Number(payload.sub));
     if (!user.refreshToken) {
       throw new UnauthorizedException("Invalid credentials");
     }
@@ -91,7 +92,7 @@ export class AuthService {
     }
 
     // Generate a new JWT
-    return await this.issueTokens(user.id, user.email);
+    return await this.issueTokens(user.id, user.email, user.roles);
   }
 
   async signOut(payload: any) {
@@ -100,9 +101,9 @@ export class AuthService {
     return { statusCode: HttpStatus.OK, message: "Successfully signed out" };
   }
 
-  private async issueTokens(id: number, email: string) {
+  private async issueTokens(id: number, email: string, roles: Role[]) {
     // Generate JWT
-    const tokens = await this.generateTokenByUser(id, email);
+    const tokens = await this.generateTokenByUser(id, email, roles);
 
     // Hash the refresh token
     const hashedRefreshToken = this.hashRefreshToken(tokens.refresh_token);
@@ -119,14 +120,14 @@ export class AuthService {
     return createHash("sha256").update(refreshToken).digest("hex");
   }
 
-  private async generateTokenByUser(id: number, email: string) {
+  private async generateTokenByUser(id: number, email: string, roles: Role[]) {
     // Define environment variables
     if (!this.ACCESS_SECRET || !this.REFRESH_SECRET) {
       throw new Error("JWT_SECRET is not defined");
     }
 
     // Generate JWT
-    const payload = { sub: id, email, jti: randomUUID() };
+    const payload = { sub: id, email, jti: randomUUID(), roles };
     const tokens = {
       access_token: await this.jwtService.signAsync(payload, {
         expiresIn: "15m",
