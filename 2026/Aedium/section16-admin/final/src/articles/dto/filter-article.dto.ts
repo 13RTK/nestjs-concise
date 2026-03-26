@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-import { PaginationArticleDto } from "./pagination-article.dto";
+import { PaginationArticleDto } from './pagination-article.dto';
 
 export class FilterArticleDto extends PaginationArticleDto {
   @IsString()

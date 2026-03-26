@@ -4,14 +4,14 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
-} from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
-import { Request } from "express";
-import { createHash, randomUUID } from "node:crypto";
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { Request } from 'express';
+import { createHash, randomUUID } from 'node:crypto';
 
-import { UsersService } from "../users/users.service";
-import { Role } from "./enums/role.enum";
+import { UsersService } from '../users/users.service';
+import { Role } from './enums/role.enum';
 
 const HASH_ROUNDS = 10;
 
@@ -31,13 +31,13 @@ export class AuthService {
     // Check if user exists
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
 
     // Check if password is correct
     const comparedResult = await bcrypt.compare(pass, user.password);
     if (!comparedResult) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     // Generate a JWT and return it here
@@ -51,7 +51,7 @@ export class AuthService {
     // Check if user already exists
     const user = await this.usersService.findUserByEmail(email);
     if (user) {
-      throw new ConflictException("User with this email already exists");
+      throw new ConflictException('User with this email already exists');
     }
 
     // Hash the password
@@ -71,7 +71,7 @@ export class AuthService {
     // Extract the refresh token
     const refreshToken = this.extractTokenFromHeader(request);
     if (!refreshToken) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     // Verify the refresh token
@@ -82,13 +82,13 @@ export class AuthService {
     // Check if the user exists
     const user = await this.usersService.findOne(Number(payload.sub));
     if (!user.refreshToken) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     // Check if the refresh token is valid
     const comparedResult = this.hashRefreshToken(refreshToken) === user.refreshToken;
     if (!comparedResult) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     // Generate a new JWT
@@ -98,7 +98,7 @@ export class AuthService {
   async signOut(payload: any) {
     await this.usersService.update(payload.sub, { refreshToken: null });
 
-    return { statusCode: HttpStatus.OK, message: "Successfully signed out" };
+    return { statusCode: HttpStatus.OK, message: 'Successfully signed out' };
   }
 
   private async issueTokens(id: number, email: string, roles: Role[]) {
@@ -117,24 +117,24 @@ export class AuthService {
   }
 
   private hashRefreshToken(refreshToken: string) {
-    return createHash("sha256").update(refreshToken).digest("hex");
+    return createHash('sha256').update(refreshToken).digest('hex');
   }
 
   private async generateTokenByUser(id: number, email: string, roles: Role[]) {
     // Define environment variables
     if (!this.ACCESS_SECRET || !this.REFRESH_SECRET) {
-      throw new Error("JWT_SECRET is not defined");
+      throw new Error('JWT_SECRET is not defined');
     }
 
     // Generate JWT
     const payload = { sub: id, email, jti: randomUUID(), roles };
     const tokens = {
       access_token: await this.jwtService.signAsync(payload, {
-        expiresIn: "15m",
+        expiresIn: '15m',
         secret: this.ACCESS_SECRET,
       }),
       refresh_token: await this.jwtService.signAsync(payload, {
-        expiresIn: "7d",
+        expiresIn: '7d',
         secret: this.REFRESH_SECRET,
       }),
     };
@@ -142,8 +142,8 @@ export class AuthService {
   }
 
   extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
 
-    return type === "Bearer" ? token : undefined;
+    return type === 'Bearer' ? token : undefined;
   }
 }

@@ -1,11 +1,11 @@
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { Role } from "../auth/enums/role.enum";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { User } from "./entities/user.entity";
+import { Role } from '../auth/enums/role.enum';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -28,15 +28,24 @@ export class UsersService {
   }
 
   // Admin
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    const users = await this.userRepository.findAll({
+      exclude: ['password', 'refreshToken', 'roles'],
+      where: {
+        roles: {
+          $nin: [Role.Admin],
+        },
+      },
+    });
+
+    return users;
   }
 
   async findOne(id: number) {
     const user = await this.userRepository.findOne(id);
 
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
 
     return user;
@@ -46,12 +55,12 @@ export class UsersService {
     const user = await this.userRepository.findOne(
       { id: userId },
       {
-        exclude: ["password", "refreshToken"],
+        exclude: ['password', 'refreshToken'],
       },
     );
 
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
 
     return user;
