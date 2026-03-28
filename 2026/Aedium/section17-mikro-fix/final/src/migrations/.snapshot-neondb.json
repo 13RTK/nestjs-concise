@@ -21,7 +21,8 @@
           "scale": 0,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "integer"
         },
         "title": {
           "name": "title",
@@ -36,7 +37,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "string"
         },
         "content": {
           "name": "content",
@@ -51,7 +53,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "text"
         },
         "status": {
           "name": "status",
@@ -69,7 +72,8 @@
           "enumItems": [
             "draft",
             "published"
-          ]
+          ],
+          "mappedType": "enum"
         },
         "created_at": {
           "name": "created_at",
@@ -84,7 +88,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "datetime"
         },
         "updated_at": {
           "name": "updated_at",
@@ -99,7 +104,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "datetime"
         },
         "author_id": {
           "name": "author_id",
@@ -114,7 +120,8 @@
           "scale": 0,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "integer"
         }
       },
       "indexes": [
@@ -172,7 +179,8 @@
           "scale": 0,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "integer"
         },
         "username": {
           "name": "username",
@@ -187,7 +195,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "string"
         },
         "email": {
           "name": "email",
@@ -202,7 +211,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "string"
         },
         "password": {
           "name": "password",
@@ -217,7 +227,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "text"
         },
         "refresh_token": {
           "name": "refresh_token",
@@ -232,7 +243,8 @@
           "scale": null,
           "default": null,
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "text"
         },
         "roles": {
           "name": "roles",
@@ -247,7 +259,8 @@
           "scale": null,
           "default": "'{user}'",
           "comment": null,
-          "enumItems": []
+          "enumItems": [],
+          "mappedType": "array"
         }
       },
       "indexes": [

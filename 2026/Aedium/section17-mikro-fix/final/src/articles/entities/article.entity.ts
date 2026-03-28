@@ -1,5 +1,11 @@
 import { OptionalProps } from '@mikro-orm/core';
-import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import {
+  Entity,
+  Enum,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/decorators/legacy';
 
 import { User } from '../../users/entities/user.entity';
 
@@ -16,13 +22,13 @@ export class Article {
   id: number;
 
   @Property()
-  title: string;
+  title!: string;
 
   @Property({ type: 'text' })
-  content: string;
+  content!: string;
 
   @Enum(() => ArticleStatus)
-  status: ArticleStatus;
+  status!: ArticleStatus;
 
   @Property()
   createdAt = new Date();
@@ -30,6 +36,6 @@ export class Article {
   @Property({ onUpdate: () => new Date() })
   updatedAt = new Date();
 
-  @ManyToOne()
+  @ManyToOne(() => User)
   author: User;
 }

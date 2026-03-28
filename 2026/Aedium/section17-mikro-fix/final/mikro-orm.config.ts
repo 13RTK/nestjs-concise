@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig } from '@mikro-orm/postgresql';
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { SeedManager } from '@mikro-orm/seeder';
+import { ReflectMetadataProvider } from '@mikro-orm/decorators/legacy';
 
 export default defineConfig({
   // for simplicity, we use the SQLite database, as it's available pretty much everywhere
@@ -27,7 +27,7 @@ export default defineConfig({
     fileName: (className: string) => className, // seeder file naming convention
   },
 
-  metadataProvider: TsMorphMetadataProvider,
+  metadataProvider: ReflectMetadataProvider,
 
   // explicitly list your entities - we'll create the User entity next
   entities: ['dist/**/*.entity.js'],

@@ -1,5 +1,11 @@
 import { Collection } from '@mikro-orm/core';
-import { Entity, Enum, OneToMany, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import {
+  Entity,
+  Enum,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/decorators/legacy';
 
 import { Article } from '../../articles/entities/article.entity';
 import { Role } from '../../auth/enums/role.enum';
@@ -10,13 +16,13 @@ export class User {
   id: number;
 
   @Property({ unique: true })
-  username: string;
+  username!: string;
 
   @Property({ unique: true })
-  email: string;
+  email!: string;
 
   @Property({ type: 'text' })
-  password: string;
+  password!: string;
 
   @OneToMany(() => Article, (article) => article.author, { nullable: true })
   articles = new Collection<Article>(this);
@@ -24,6 +30,6 @@ export class User {
   @Property({ type: 'text', nullable: true })
   refreshToken?: string | null;
 
-  @Enum({ default: [Role.User] })
+  @Enum({ items: () => Role, array: true, default: [Role.User] })
   roles = [Role.User];
 }
