@@ -7,6 +7,7 @@ import { UserFactory } from './UserFactory';
 
 import type { EntityManager } from '@mikro-orm/core';
 import { Role } from '../src/auth/enums/role.enum';
+import { CommentFactory } from './CommentFactory';
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
@@ -18,7 +19,13 @@ export class DatabaseSeeder extends Seeder {
           return;
         }
 
-        user.articles.set(new ArticleFactory(em).make(articleCount));
+        user.articles.set(new ArticleFactory(em).each((article) => {
+          const comments = new CommentFactory(em).each((comment) => {
+            comment.author = user;
+          }).make(faker.number.int({ min: 1, max: 3 }));
+
+          article.comments.set(comments);
+        }).make(articleCount));
       })
       .make(10);
 

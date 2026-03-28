@@ -9,6 +9,7 @@ import {
 
 import { Article } from '../../articles/entities/article.entity';
 import { Role } from '../../auth/enums/role.enum';
+import { Comment } from '../../comments/entities/comment.entity';
 
 @Entity()
 export class User {
@@ -26,6 +27,9 @@ export class User {
 
   @OneToMany(() => Article, (article) => article.author, { nullable: true })
   articles = new Collection<Article>(this);
+
+  @OneToMany(() => Comment, (comment) => comment.author, { nullable: true })
+  comments = new Collection<Comment>(this);
 
   @Property({ type: 'text', nullable: true })
   refreshToken?: string | null;

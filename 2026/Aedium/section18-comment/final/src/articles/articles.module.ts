@@ -9,5 +9,6 @@ import { Article } from './entities/article.entity';
   imports: [MikroOrmModule.forFeature([Article])],
   controllers: [ArticlesController],
   providers: [ArticlesService],
+  exports: [ArticlesService],
 })
 export class ArticlesModule {}

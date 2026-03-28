@@ -1,13 +1,15 @@
-import { OptionalProps } from '@mikro-orm/core';
+import { Collection, OptionalProps, type Rel } from '@mikro-orm/core';
 import {
   Entity,
   Enum,
   ManyToOne,
+  OneToMany,
   PrimaryKey,
   Property,
 } from '@mikro-orm/decorators/legacy';
 
 import { User } from '../../users/entities/user.entity';
+import { Comment } from '../../comments/entities/comment.entity';
 
 export enum ArticleStatus {
   DRAFT = 'draft',
@@ -37,5 +39,8 @@ export class Article {
   updatedAt = new Date();
 
   @ManyToOne(() => User)
-  author: User;
+  author: Rel<User>;
+
+  @OneToMany(() => Comment, (comment) => comment.article, { nullable: true })
+  comments = new Collection<Comment>(this);
 }
