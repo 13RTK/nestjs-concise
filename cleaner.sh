@@ -9,3 +9,6 @@ find . -name "dist" -exec rm -rf {} \;
 
 # find all the .log and delete them
 find . -name "*.log" -exec rm -rf {} \;
+
+# find all the temp folder and delete them
+find . -name "temp" -exec rm -rf {} \;
